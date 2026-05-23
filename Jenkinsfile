@@ -12,7 +12,7 @@ pipeline {
         stage("Build Docker Image") {
             steps {
                 echo "Building Docker image..."
-                sh "docker build -t YOUR-DOCKER-USERNAME/dan-app:$BUILD_NUMBER ."
+                bat "docker build -t jacob052205/dan-app:$BUILD_NUMBER ."
             }
         }
 
@@ -20,7 +20,7 @@ pipeline {
             steps {
                 echo "Pushing Docker image to Docker Hub..."
                 withDockerRegistry([credentialsId: "docker-hub-creds", url: ""]) {
-                    sh "docker push YOUR-DOCKER-USERNAME/dan-app:$BUILD_NUMBER"
+                    bat "docker push jacob052205/dan-app:$BUILD_NUMBER"
                 }
             }
         }
@@ -28,9 +28,9 @@ pipeline {
         stage("Deploy Container") {
             steps {
                 echo "Deploying container..."
-                sh "docker stop dan-app || true"
-                sh "docker rm dan-app || true"
-                sh "docker run -d -p 8080:80 --name dan-app YOUR-DOCKER-USERNAME/dan-app:$BUILD_NUMBER"
+                bat "docker stop dan-app || true"
+                bat "docker rm dan-app || true"
+                bat "docker run -d -p 8080:80 --name dan-app jacob052205/dan-app:$BUILD_NUMBER"
             }
         }
     }
