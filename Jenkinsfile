@@ -11,8 +11,9 @@ pipeline {
 
         stage('Deploy with Docker Compose') {
             steps {
-                echo 'Starting containers with Docker Compose...'
+                echo 'Stopping old containers...'
                 bat 'docker-compose down'
+                echo 'Building and starting new containers...'
                 bat 'docker-compose up -d --build'
             }
         }
@@ -20,7 +21,8 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline executed successfully! Apps running at http://localhost:8081'
+            echo 'Pipeline executed successfully!'
+            echo 'App running at http://localhost:8081'
         }
         failure {
             echo 'Pipeline failed. Check the logs.'
