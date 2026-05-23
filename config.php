@@ -1,12 +1,14 @@
 <?php
-// Database configuration
-define('DB_HOST', 'sql103.ezyro.com');
-define('DB_USER', 'ezyro_41666016');
-define('DB_PASS', 'nicako052205');
-define('DB_NAME', 'ezyro_41666016_waste');
+// Database configuration for LOCAL DOCKER
+define('DB_HOST', 'mysql-db');  // Use the service name from docker-compose.yml
+define('DB_USER', 'dan_user');
+define('DB_PASS', 'dan_password');
+define('DB_NAME', 'dan_database');
 
 // Start session
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 // Create connection
 function getDBConnection() {
