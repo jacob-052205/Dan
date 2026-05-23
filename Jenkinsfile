@@ -2,45 +2,28 @@ pipeline {
     agent any
 
     stages {
-        stage("Checkout Code") {
+        stage('Checkout Code') {
             steps {
-                echo "Cloning repository from GitHub..."
+                echo 'Cloning repository from GitHub...'
                 checkout scm
             }
         }
 
-        stage("Build Docker Image") {
+        stage('Deploy with Docker Compose') {
             steps {
-                echo "Building Docker image..."
-                bat "docker build -t jacob052205/dan-app:$BUILD_NUMBER ."
-            }
-        }
-
-        stage("Push Docker Image") {
-            steps {
-                echo "Pushing Docker image to Docker Hub..."
-                withDockerRegistry([credentialsId: "docker-hub-creds", url: ""]) {
-                    bat "docker push jacob052205/dan-app:$BUILD_NUMBER"
-                }
-            }
-        }
-
-        stage("Deploy Container") {
-            steps {
-                echo "Deploying container..."
-                bat "docker stop dan-app & exit 0"
-                bat "docker rm dan-app & exit 0"
-                bat "docker run -d -p 8081:80 --name dan-app jacob052205/dan-app:$BUILD_NUMBER"
+                echo 'Starting containers with Docker Compose...'
+                bat 'docker-compose down'
+                bat 'docker-compose up -d --build'
             }
         }
     }
 
     post {
         success {
-            echo "Pipeline executed successfully!"
+            echo 'Pipeline executed successfully! Apps running at http://localhost:8081'
         }
         failure {
-            echo "Pipeline failed. Check the logs."
+            echo 'Pipeline failed. Check the logs.'
         }
     }
 }

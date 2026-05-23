@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  php-app:
+    build: .
+    container_name: dan-php-app
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql-db
+    environment:
+      - DB_HOST=mysql-db
+      - DB_USER=dan_user
+      - DB_PASSWORD=dan_password
+      - DB_NAME=dan_database
+    networks:
+      - app-network
+
+  mysql-db:
+    image: mysql:8.0
+    container_name: dan-mysql-db
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=dan_database
+      - MYSQL_USER=dan_user
+      - MYSQL_PASSWORD=dan_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: dan-phpmyadmin
+    ports:
+      - "8082:80"
+    environment:
+      - PMA_HOST=mysql-db
+      - PMA_PORT=3306
+    depends_on:
+      - mysql-db
+    networks:
+      - app-network
+
+volumes:
+  mysql-data:
+
+networks:
+  app-network:
+    driver: bridge
