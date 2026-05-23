@@ -30,7 +30,7 @@ pipeline {
                 echo "Deploying container..."
                 bat "docker stop dan-app & exit 0"
                 bat "docker rm dan-app & exit 0"
-                bat "docker run -d -p 8080:80 --name dan-app jacob052205/dan-app:$BUILD_NUMBER"
+                bat "docker run -d -p 8081:80 --name dan-app jacob052205/dan-app:$BUILD_NUMBER"
             }
         }
     }
